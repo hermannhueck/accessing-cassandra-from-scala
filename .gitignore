@@ -16,6 +16,7 @@ project/.bloop/
 *.zip
 *.code-workspace
 project/metals.sbt
+secure-connect-killrvideocluster.zip
 
 # hidden files
 .history
