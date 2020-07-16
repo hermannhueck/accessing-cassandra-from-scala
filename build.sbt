@@ -21,17 +21,12 @@ lazy val commonSettings =
     initialCommands :=
       s"""|
           |import scala.util.chaining._
-          |import fs2._, cats.effect._, cats.effect.implicits._, cats.implicits._
-          |import scala.concurrent.ExecutionContext.Implicits.global
-          |import scala.concurrent.duration._
-          |implicit val contextShiftIO: ContextShift[IO] = IO.contextShift(global)
-          |implicit val timerIO: Timer[IO] = IO.timer(global)
           |println
           |""".stripMargin
   )
 
 lazy val root = (project in file("."))
-  .aggregate(core)
+  .aggregate(core, `datastax-workshop`)
   .settings(commonSettings)
   .settings(
     name := "root",
@@ -47,6 +42,16 @@ lazy val core = (project in file("core"))
     description := projectDescription,
     libraryDependencies ++= Dependencies.coreDependencies(scalaVersion.value),
     dependencyOverrides += Dependencies.metricsCore
+  )
+
+lazy val `datastax-workshop` = (project in file("datastax-workshop"))
+  .dependsOn(hutil)
+  .settings(commonSettings)
+  .settings(
+    name := "datastax-workshop",
+    description := "Datastax Workshop using the Datastax java-driver for Cassandra",
+    libraryDependencies ++= Dependencies.datastaxJavaDriverDependencies(scalaVersion.value),
+    scalacOptions -= "-Werror"
   )
 
 lazy val hutil = (project in file("hutil"))
